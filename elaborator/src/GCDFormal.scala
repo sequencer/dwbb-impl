@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: Unlicense
 // SPDX-FileCopyrightText: 2024 Jiuyang Liu <liu@jiuyang.me>
-package org.chipsalliance.gcd.elaborator
+package oscc.gcd.elaborator
 
 import mainargs._
-import org.chipsalliance.gcd.{GCDFormal, GCDFormalParameter}
-import org.chipsalliance.gcd.elaborator.GCDMain.GCDParameterMain
+import oscc.gcd.{GCDFormal, GCDFormalParameter}
+import oscc.gcd.elaborator.GCDMain.GCDParameterMain
 import chisel3.experimental.util.SerializableModuleElaborator
 
 object GCDFormalMain extends SerializableModuleElaborator {

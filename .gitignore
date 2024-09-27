@@ -4,10 +4,13 @@
 .mill-jvm-opts
 .metals/
 .vscode/
+.envrc
+.direnv/
+.scala-build/
 
 out/
 result*
-gcd-sim-result/
+dwbb-sim-result/
 /dependencies/
 target/
 

@@ -28,9 +28,10 @@ final: prev: {
     assert final.lib.assertMsg (final.cdsLicenseFile != "")
       "You forget to set CDS_LIC_FILE or the '--impure' flag";
     final.callPackage ./pkgs/cds-fhs-env.nix { };
+  dwbb-ip = builtins.getEnv "DWBB_DIR";
 
 
   projectDependencies = final.callPackage ./pkgs/project-dependencies.nix { };
 
-  gcd = final.callPackage ./gcd { };
+  dwbb = final.callPackage ./dwbb { };
 }

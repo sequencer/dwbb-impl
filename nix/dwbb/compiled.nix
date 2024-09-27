@@ -20,9 +20,9 @@
 
 let
   self = stdenv.mkDerivation rec {
-    name = "gcd";
+    name = "compiled";
 
-    mainClass = "org.chipsalliance.gcd.elaborator.${target}Main";
+    mainClass = "oscc.dwbb.testbench.${target}.Main";
 
     src = with lib.fileset;
       toSource {
@@ -30,7 +30,7 @@ let
         fileset = unions [
           ./../../build.sc
           ./../../common.sc
-          ./../../gcd
+          ./../../dwbb
           ./../../elaborator
         ];
       };
@@ -90,9 +90,9 @@ let
     installPhase = ''
       mkdir -p $out/share/java
 
-      add-determinism -j $NIX_BUILD_CORES out/elaborator/assembly.dest/out.jar
+      add-determinism -j $NIX_BUILD_CORES out/dwbb/assembly.dest/out.jar
 
-      mv out/elaborator/assembly.dest/out.jar $out/share/java/elaborator.jar
+      mv out/dwbb/assembly.dest/out.jar $out/share/java/elaborator.jar
 
       mkdir -p $elaborator/bin
       makeWrapper ${jdk21}/bin/java $elaborator/bin/elaborator \

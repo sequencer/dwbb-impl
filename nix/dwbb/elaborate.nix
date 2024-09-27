@@ -2,7 +2,7 @@
 # SPDX-FileCopyrightText: 2024 Jiuyang Liu <liu@jiuyang.me>
 
 # TODO: in the future, we may need to add circtbindng pass and set it by default.
-{ lib, stdenvNoCC, espresso, circt, elaborator }:
+{ stdenvNoCC, espresso, circt, elaborator }:
 stdenvNoCC.mkDerivation {
   name = "${elaborator.name}-elaborate";
 

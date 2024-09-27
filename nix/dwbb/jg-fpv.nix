@@ -4,6 +4,7 @@
 { stdenvNoCC
 , rtl
 , cds-fhs-env
+, dwbb-ip
 }:
 
 stdenvNoCC.mkDerivation {
@@ -29,6 +30,9 @@ stdenvNoCC.mkDerivation {
 
   buildPhase = ''
     runHook preBuild
+
+    cp ${dwbb-ip}/sim_ver/${rtl.target}.v .
+    echo ${rtl.target}.v >> filelist.f
 
     echo "[nix] running Jasper"
     fhsBash=${cds-fhs-env}/bin/cds-fhs-env
