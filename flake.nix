@@ -25,7 +25,7 @@
         formatter = pkgs.nixpkgs-fmt;
         legacyPackages = pkgs;
         devShells.default = pkgs.mkShell {
-          inputsFrom = [ pkgs.dwbb.add.compiled ];
+          inputsFrom = [ pkgs.dwbb.DW01_add.compiled ];
         };
       });
 }

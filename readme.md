@@ -93,6 +93,19 @@ class SOME_DWBB(parameter: SOME_DWBB.Parameter)
 }
 ```
 
+Register the design in `nix/dwbb/default.nix`:
+
+```diff
+--- a/nix/dwbb/default.nix
++++ b/nix/dwbb/default.nix
+@@ -24,5 +24,6 @@ let
+ in
+ {
+   DW01_add = newDesign { target = "DW01_add"; layers = [ "Verification.BMC" "Verification.Debug" ]; };
++  SOME_DWBB = newDesign { target = "SOME_DWBB"; layers = [ "Verification.BMC" ]; };
+ })
+```
+
 Then you can run the jasper with the name of the module that you have added as the target:
 
 ```bash
@@ -100,6 +113,16 @@ nix build '.#dwbb.<target>.jg-fpv' --impure
 ```
 
 and the report will be generated in the result/
+
+When the formal flow is passed, add a line to the `implemented.list` file listing the implemented modules.
+
+```diff
+--- a/implemented.list
++++ b/implemented.list
+@@ -1 +1,2 @@
+ DW01_add
++SOME_DWBB
+```
 
 * Note that in order to use jasper gold for formal verification, you need to set the environment variables `JASPER_HOME`,`CDS_LIC_FILE`, `DWBB_DIR` and add the`--impure` flag.
 

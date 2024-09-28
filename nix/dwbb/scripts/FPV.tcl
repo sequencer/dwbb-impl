@@ -38,4 +38,7 @@ if { $length > 0 } {
 } else {
   puts "All properties passed!"
 }
+set failed_num [open failed_num w]
+puts $failed_num "$length"
+close $failed_num
 exit 0
