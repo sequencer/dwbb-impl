@@ -32,7 +32,7 @@ Add reference for target design:
 package oscc.dwbb.reference
 
 import chisel3._
-import oscc.dwbb.interface._
+import org.chipsalliance.dwbb.interface._
 
 class SOME_DWBB(parameter: SOME_DWBB.Parameter)
     extends ReferenceModule(new SOME_DWBB.Interface(parameter), parameter) {
@@ -47,7 +47,7 @@ cd dwbb/src/testbench
 sed 's/DW01_add/SOME_DWBB/g' DW01_add.scala > SOME_DWBB.scala
 ```
 
-Generate proper configs as test case:
+Generate proper configs as test cases:
 
 ```bash
 mkdir configs/SOME_DWBB
@@ -73,7 +73,7 @@ Register the design in `nix/dwbb/default.nix`:
  })
 ```
 
-Then you can run the jasper with the name of the module that you have added as the target:
+Then you can run the JasperGold with a test case:
 
 ```bash
 nix build '.#dwbb.SOME_DWBB.<testcase>.jg-fpv' --impure
