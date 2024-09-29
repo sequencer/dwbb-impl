@@ -4,11 +4,11 @@ package oscc.dwbb.testbench.DW01_add
 
 import chisel3.experimental.util.SerializableModuleElaborator
 import mainargs.{arg, main, ParserForClass, ParserForMethods, TokensReader}
+import org.chipsalliance.dwbb.wrapper.DW01_add.{DW01_add => Wrapper}
+import org.chipsalliance.dwbb.interface.DW01_add.{Interface, Parameter}
 import oscc.dwbb._
-import oscc.dwbb.interface.DW01_add.{Interface, Parameter}
 import oscc.dwbb.reference.{DW01_add => Reference}
 import oscc.dwbb.testbench._
-import oscc.dwbb.wrapper.DW01_add.{DW01_add => Wrapper}
 
 class Testbench(parameter: Parameter) extends TestBench[Parameter, Interface, Reference, Wrapper](parameter)
 

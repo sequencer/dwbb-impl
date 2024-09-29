@@ -10,6 +10,7 @@ import mill.scalalib.TestModule.Utest
 import mill.util.Jvm
 import coursier.maven.MavenRepository
 import $file.dependencies.chisel.build
+import $file.dependencies.`chisel-interface`.common
 import $file.common
 
 object deps {
@@ -26,8 +27,21 @@ trait Chisel extends millbuild.dependencies.chisel.build.Chisel {
   override def millSourcePath = os.pwd / "dependencies" / "chisel"
 }
 
+object dwbbInterface extends DWBBInterface
+trait DWBBInterface extends millbuild.dependencies.`chisel-interface`.common.DWBBModule {
+  override def millSourcePath =
+    os.pwd / "dependencies" / "chisel-interface" / "dwbb"
+  def scalaVersion = T(deps.scalaVer)
+
+  def chiselModule = Some(chisel)
+  def chiselPluginJar = T(Some(chisel.pluginModule.jar()))
+  def chiselIvy = None
+  def chiselPluginIvy = None
+  def mainargsIvy: Dep = deps.mainargs
+}
+
 object dwbb extends DWBB
-trait DWBB extends millbuild.common.HasChisel with ScalafmtModule {
+trait DWBB extends millbuild.common.ElaboratorModule with ScalafmtModule {
   def scalaVersion = T(deps.scalaVer)
 
   def panamaconverterModule = panamaconverter
@@ -35,10 +49,9 @@ trait DWBB extends millbuild.common.HasChisel with ScalafmtModule {
   def circtInstallPath =
     T.input(PathRef(os.Path(T.ctx().env("CIRCT_INSTALL_PATH"))))
 
-  def generators = Seq(dwbb)
+  def generators = Seq(dwbbInterface)
 
   def mainargsIvy = deps.mainargs
-  override def ivyDeps = T(super.ivyDeps() ++ Seq(mainargsIvy))
 
   def chiselModule = Some(chisel)
   def chiselPluginJar = T(Some(chisel.pluginModule.jar()))
