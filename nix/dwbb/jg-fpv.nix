@@ -31,7 +31,7 @@ stdenvNoCC.mkDerivation {
   buildPhase = ''
     runHook preBuild
 
-    cp ${dwbb-ip}/sim_ver/${rtl.target}.v .
+    sed '/\/\/ synopsys translate_off/d;/\/\/ synopsys translate_on/d' ${dwbb-ip}/sim_ver/${rtl.target}.v > ${rtl.target}.v
     echo ${rtl.target}.v >> filelist.f
 
     echo "[nix] running Jasper"
