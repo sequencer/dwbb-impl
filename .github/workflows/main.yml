@@ -1,4 +1,4 @@
-name: Build and Formal Verification
+name: Build and Run Formal Verification
 on:
   pull_request:
     types:

@@ -37,7 +37,7 @@ in
 {
   DW01_add = newDesign {
     target = "DW01_add";
-    layers = [ "Verification.BMC" "Verification.Debug" ];
+    layers = [ "Verification.BMC" ];
   };
 })
 

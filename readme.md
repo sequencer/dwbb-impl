@@ -8,11 +8,7 @@ This is its wrapper in Chisel. This project is designed for providing an interfa
 
 ## Project Structure
 
-There are four folders for the project.
-
-- interface
-
-  The interface is interface that need to be implemented in reference and instantiated in wrapper, it also contains the chisel parameter for specific building block.
+There are two folders for the project.
 
 - reference
 
@@ -21,10 +17,6 @@ There are four folders for the project.
 - testbench
   
   the testbench folder contains a template(which can be implemented via macro or compiler plugin) to create a formal checker for blackbox and reference.
-
-- wrapper
-  
-  this is the wrapper for dwbb, is what normal user requires to instantiate DWBB blackbox in their project.
 
 ## User Guide
 
@@ -72,7 +64,7 @@ Register the design in `nix/dwbb/default.nix`:
 @@ -39,5 +39,9 @@ in
   DW01_add = newDesign {
      target = "DW01_add";
-     layers = [ "Verification.BMC" "Verification.Debug" ];
+     layers = [ "Verification.BMC" ];
    };
 +  SOME_DWBB = newDesign {
 +    target = "SOME_DWBB";
@@ -84,7 +76,7 @@ Register the design in `nix/dwbb/default.nix`:
 Then you can run the jasper with the name of the module that you have added as the target:
 
 ```bash
-nix build '.#dwbb.<target>.<testcase>.jg-fpv' --impure
+nix build '.#dwbb.SOME_DWBB.<testcase>.jg-fpv' --impure
 ```
 
 and the report will be generated in the result/
