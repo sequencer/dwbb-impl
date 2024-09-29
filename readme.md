@@ -1,13 +1,15 @@
 # DWBB(DesignWare Building Block)
 
-[The DesignWare Library's Datapath and Building Block IP](https://www.synopsys.com/dw/buildingblock.php) is a collection of reusable intellectual property blocks that are tightly integrated into the Synopsys synthesis environment. 
+[The DesignWare Library's Datapath and Building Block IP](https://www.synopsys.com/dw/buildingblock.php) is a collection of reusable intellectual property blocks that are tightly integrated into the Synopsys synthesis environment.
 
 This is its wrapper in Chisel. This project is designed for providing an interface for Chisel user to easily instantiate the DWBB IP to improve the circuit performance and reduce the duplicate library work.
 
 **This project is not meant to replace the DWBB nor providing the opensource implementation to it, the design in reference folder is only meant for simulation usage. and won't grantee its performance**
 
 ## Project Structure
+
 There are four folders for the project.
+
 - interface
 
   The interface is interface that need to be implemented in reference and instantiated in wrapper, it also contains the chisel parameter for specific building block.
@@ -25,60 +27,13 @@ There are four folders for the project.
   this is the wrapper for dwbb, is what normal user requires to instantiate DWBB blackbox in their project.
 
 ## User Guide
+
 Import this project into your project via submodule. Project example will be given in the future.
 
 ## Contribution Guide
-Add interface to interface folder:
-```scala
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2024 Jiuyang Liu <liu@jiuyang.me>
-package oscc.dwbb.interface.SOME_DWBB
 
-import chisel3._
-import chisel3.experimental.SerializableModuleParameter
-import upickle.default
+Add reference for target design:
 
-object Parameter {
-  implicit def rw: default.ReadWriter[Parameter] =
-    upickle.default.macroRW[Parameter]
-}
-// add scala parameter for Verilog parameter, it will be automatically serialized to json via upickle.
-// All the parameter should be meaningful and should be the basic type.
-case class Parameter(someParameter: Int) extends SerializableModuleParameter {
-  // fill requirements here, which is usually in the dwbb pdf documentation.
-  require(???)
-}
-
-// declare bundle with 
-class Interface(parameter: Parameter) extends Bundle {
-  // declare bundle here, order should be same with DWBB.
-  val SOMEINPUT: UInt = Input(UInt(parameter.someParaemter.W))
-}
-```
-Add wrapper:
-```scala
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2024 Jiuyang Liu <liu@jiuyang.me>
-package oscc.dwbb.wrapper
-
-import chisel3.experimental.IntParam
-import oscc.dwbb.interface._
-
-import scala.collection.immutable.SeqMap
-
-class SOME_DWBB(parameter: SOME_DWBB.Parameter)
-    extends WrapperModule[SOME_DWBB.Interface, SOME_DWBB.Parameter](
-      new SOME_DWBB.Interface(parameter),
-      parameter,
-      p =>
-        SeqMap(
-          // convert Scala parameter to Verilog Param.
-          // this should be conformed to the DWBB documentation.
-          "width" -> IntParam(p.width)
-        )
-    )
-```
-Add reference(not required for each DWBB):
 ```scala
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-FileCopyrightText: 2024 Jiuyang Liu <liu@jiuyang.me>
@@ -93,38 +48,48 @@ class SOME_DWBB(parameter: SOME_DWBB.Parameter)
 }
 ```
 
+Add elaborator for target design:
+
+```bash
+cd dwbb/src/testbench
+sed 's/DW01_add/SOME_DWBB/g' DW01_add.scala > SOME_DWBB.scala
+```
+
+Generate proper configs as test case:
+
+```bash
+mkdir configs/SOME_DWBB
+nix run .#dwbb.SOME_DWBB.noconfig.elaborator -- config --case-name case01 <other parameters>
+nix run .#dwbb.SOME_DWBB.noconfig.elaborator -- config --case-name case02 <other parameters>
+# and more...
+```
+
 Register the design in `nix/dwbb/default.nix`:
 
 ```diff
 --- a/nix/dwbb/default.nix
 +++ b/nix/dwbb/default.nix
-@@ -24,5 +24,6 @@ let
- in
- {
-   DW01_add = newDesign { target = "DW01_add"; layers = [ "Verification.BMC" "Verification.Debug" ]; };
-+  SOME_DWBB = newDesign { target = "SOME_DWBB"; layers = [ "Verification.BMC" ]; };
+@@ -39,5 +39,9 @@ in
+  DW01_add = newDesign {
+     target = "DW01_add";
+     layers = [ "Verification.BMC" "Verification.Debug" ];
+   };
++  SOME_DWBB = newDesign {
++    target = "SOME_DWBB";
++    layers = [ "Verification.BMC" ];
++  };
  })
 ```
 
 Then you can run the jasper with the name of the module that you have added as the target:
 
 ```bash
-nix build '.#dwbb.<target>.jg-fpv' --impure
+nix build '.#dwbb.<target>.<testcase>.jg-fpv' --impure
 ```
 
 and the report will be generated in the result/
 
-When the formal flow is passed, add a line to the `implemented.list` file listing the implemented modules.
-
-```diff
---- a/implemented.list
-+++ b/implemented.list
-@@ -1 +1,2 @@
- DW01_add
-+SOME_DWBB
-```
-
-* Note that in order to use jasper gold for formal verification, you need to set the environment variables `JASPER_HOME`,`CDS_LIC_FILE`, `DWBB_DIR` and add the`--impure` flag.
+- Note that in order to use jasper gold for formal verification, you need to set the environment variables `JASPER_HOME`,`CDS_LIC_FILE`, `DWBB_DIR` and add the`--impure` flag.
 
 ## License
 

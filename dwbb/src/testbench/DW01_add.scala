@@ -27,10 +27,13 @@ object Main extends SerializableModuleElaborator {
 
   @main
   def config(
-    @arg(name = "parameter") parameter:  ParameterMain,
-    @arg(name = "target-dir") targetDir: os.Path = os.pwd
+    @arg(name = "parameter") parameter: ParameterMain,
+    @arg(name = "case-name") caseName:  String
   ) =
-    os.write.over(targetDir / s"${packageName[Parameter]}.json", configImpl(parameter.convert))
+    os.write.over(
+      os.pwd / "configs" / s"${packageName[Parameter]}" / s"${caseName}.json",
+      configImpl(parameter.convert)
+    )
 
   @main
   def design(

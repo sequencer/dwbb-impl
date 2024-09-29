@@ -31,7 +31,6 @@ let
           ./../../build.sc
           ./../../common.sc
           ./../../dwbb
-          ./../../elaborator
         ];
       };
 
@@ -54,6 +53,7 @@ let
         '';
       });
 
+      inherit env;
       inherit target;
     };
 
