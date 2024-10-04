@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2024 Jiuyang Liu <liu@jiuyang.me>
 package oscc.dwbb.testbench.DW01_add
 
 import chisel3.experimental.util.SerializableModuleElaborator
