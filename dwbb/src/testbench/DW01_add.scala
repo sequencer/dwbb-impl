@@ -1,14 +1,12 @@
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-FileCopyrightText: 2024 Jiuyang Liu <liu@jiuyang.me>
 package oscc.dwbb.testbench.DW01_add
 
 import chisel3.experimental.util.SerializableModuleElaborator
 import mainargs.{arg, main, ParserForClass, ParserForMethods, TokensReader}
+import org.chipsalliance.dwbb.wrapper.DW01_add.{DW01_add => Wrapper}
+import org.chipsalliance.dwbb.interface.DW01_add.{Interface, Parameter}
 import oscc.dwbb._
-import oscc.dwbb.interface.DW01_add.{Interface, Parameter}
 import oscc.dwbb.reference.{DW01_add => Reference}
 import oscc.dwbb.testbench._
-import oscc.dwbb.wrapper.DW01_add.{DW01_add => Wrapper}
 
 class Testbench(parameter: Parameter) extends TestBench[Parameter, Interface, Reference, Wrapper](parameter)
 
@@ -27,10 +25,13 @@ object Main extends SerializableModuleElaborator {
 
   @main
   def config(
-    @arg(name = "parameter") parameter:  ParameterMain,
-    @arg(name = "target-dir") targetDir: os.Path = os.pwd
+    @arg(name = "parameter") parameter: ParameterMain,
+    @arg(name = "case-name") caseName:  String
   ) =
-    os.write.over(targetDir / s"${packageName[Parameter]}.json", configImpl(parameter.convert))
+    os.write.over(
+      os.pwd / "configs" / s"${packageName[Parameter]}" / s"${caseName}.json",
+      configImpl(parameter.convert)
+    )
 
   @main
   def design(

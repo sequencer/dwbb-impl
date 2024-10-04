@@ -1,0 +1,31 @@
+name: Build and Run Formal Verification
+on:
+  pull_request:
+    types:
+      - opened
+      - synchronize
+      - reopened
+      - ready_for_review
+      - labeled
+env:
+  USER: runner
+
+# Cancel the current workflow when new commit pushed
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  run-formal-verification:
+    name: "Run Formal Verification"
+    strategy:
+      fail-fast: false
+    runs-on: [self-hosted, linux, nixos]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: "Run Formal Verification"
+        run: |
+          ls configs | xargs -I {1} bash -c 'ls configs/{1} | sed "s/\.json$//" | xargs -I {2} bash -c "nix build .#dwbb.{1}.{2}.jg-fpv --impure && cat result/report.txt && \$(exit \$(cat result/failed_num))"'
+          
