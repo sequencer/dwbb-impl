@@ -64,11 +64,11 @@ Register the design in `nix/dwbb/default.nix`:
 @@ -39,5 +39,9 @@ in
   DW01_add = newDesign {
      target = "DW01_add";
-     layers = [ "Verification.BMC" ];
+     layers = [ "Verification.Assume" "Verification.Assert" ];
    };
 +  SOME_DWBB = newDesign {
 +    target = "SOME_DWBB";
-+    layers = [ "Verification.BMC" ];
++    layers = [ "Verification.Assume" "Verification.Assert" ];
 +  };
  })
 ```

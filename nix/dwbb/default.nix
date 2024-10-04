@@ -4,7 +4,7 @@
 { lib, newScope, }:
 lib.makeScope newScope (scope:
 let
-  newDesign = { target, layers ? [ "Verification.BMC" ] }:
+  newDesign = { target, layers ? [ "Verification.Assume" "Verification.Assert" ] }:
     let
       jsonList = builtins.attrNames (builtins.readDir ./../../configs/${target}) ++ [ "noconfig" ];
     in
@@ -37,7 +37,7 @@ in
 {
   DW01_add = newDesign {
     target = "DW01_add";
-    layers = [ "Verification.BMC" ];
+    layers = [ "Verification.Assume" "Verification.Assert" ];
   };
 })
 

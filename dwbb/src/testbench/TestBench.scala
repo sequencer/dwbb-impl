@@ -12,7 +12,6 @@ import scala.reflect.runtime.universe
 import scala.reflect.runtime.universe.{runtimeMirror, typeOf}
 object Verification {
   implicit val parent: Layer = layers.Verification
-  object BMC extends Layer(LayerConfig.Extract())
   object Debug extends Layer(LayerConfig.Extract())
 }
 class TestBench[
@@ -50,25 +49,17 @@ class TestBench[
     chisel3.reflect.DataMirror.directionOf(r) match {
       // This is enough for BMC, maybe change to LTL version to get label nice.
       case ActualDirection.Output =>
-        block(layers.Verification) {
-          block(Verification.BMC) {
-            AssertProperty(r.asUInt === d.asUInt, label = Some(s"ASSERT_$key"))
-          }
-          block(Verification.Debug) {
-            printf(p"output $key: ref: $r, dw: $d")
-          }
+        AssertProperty(r.asUInt === d.asUInt, label = Some(s"ASSERT_$key"))
+        block(Verification.Debug) {
+          printf(p"output $key: ref: $r, dw: $d")
         }
       case ActualDirection.Input =>
         val input = IO(chiselTypeOf(r)).suggestName(s"io_$key")
         r := input
         d := input
-        block(layers.Verification) {
-          block(Verification.BMC) {
-            AssumeProperty(r.asUInt === d.asUInt, label = Some(s"ASSUME_$key"))
-          }
-          block(Verification.Debug) {
-            printf(p"input $key: $input")
-          }
+        AssumeProperty(r.asUInt === d.asUInt, label = Some(s"ASSUME_$key"))
+        block(Verification.Debug) {
+          printf(p"input $key: $input")
         }
       case _ => throw new Exception("Bidirectional not allowed here.")
     }
